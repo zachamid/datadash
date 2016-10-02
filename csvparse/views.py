@@ -1,9 +1,10 @@
-from django.shortcuts import render
 from django.http import HttpResponse
+from django.template import loader
 
 import csvparse
 
 # Create your views here.
 def index(request):
 	files =csvparse.csvparse()
-	return HttpResponse(files)
+	template = loader.get_template('csvparse/index.html')
+	return HttpResponse(template.render({'files': files}, request))
