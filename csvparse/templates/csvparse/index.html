@@ -12,9 +12,9 @@
 <ul class="tabs" data-tabs id="tabs_example">
   {% for file in files %}
     {% if forloop.first %}
-      <li class="tabs-title is-active"><a href="#tab{{ forloop.counter }}">File {{ forloop.counter }}</a></li>
+      <li class="tabs-title is-active"><a href="#tab{{ forloop.counter }}"> {{ file.filename }} </a></li>
     {% else %}
-      <li class="tabs-title"><a href="#tab{{ forloop.counter }}">File {{ forloop.counter }}</a></li>
+      <li class="tabs-title"><a href="#tab{{ forloop.counter }}"> {{ file.filename }} </a></li>
     {% endif %}
   {% endfor %}
 </ul>
@@ -23,13 +23,24 @@
   {% for file in files %}
     {% if forloop.first %}
       <div class="tabs-panel is-active" id="tab{{ forloop.counter }}">
-        {{ file }}
-      </div>
     {% else %}
       <div class="tabs-panel" id="tab{{ forloop.counter }}">
-        {{ file }}
-      </div>
     {% endif %}
+    <fieldset class="fieldset">
+      <legend> Settings</legend>
+        Whats the happedy-haps
+    </fieldset>
+    <br>
+      <table>
+        {% for row in file.data %}
+          <tr>
+          {% for column in row %}
+            <td>{{  column  }}</td>
+          {% endfor %}
+          </tr>
+        {% endfor %}
+        </table>
+      </div>
   {% endfor %}
 </div>
 {% else %}
