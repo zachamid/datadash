@@ -12,26 +12,13 @@ class CSVFile:
 		self.validation_check()
 
 	def validation_check(self):
-		for i in range(len(self.data[0])):
-			field = self.data[:][i]
-			types = [0]*len(field)
-
-			for j in range(len(field)):
-				print >>sys.stderr,type(field[j])
-				if type(field[j]) is str:
-					self.valid[i]+=1
+		for i in range(len(self.data)):
+			for j in range(len(self.data[i])):
+				if is_number(self.data[i][j]):
+					self.valid[j] += 1
 				else:
-					self.valid[i]-=1
-
-				self.data[i][j] = str(self.data[i][j]) + '(' + str(type(self.data[i][j])) + ')'
-
-			if self.valid[i] > 0:
-				self.type[i] = 'Numeric'
-			else:
-				self.type[i] = 'Alpha'
-
-		for i in range(len(self.data[0])):
-			self.valid[i] = self.valid[i]/len(self.data[0])
+					self.valid[j] -= 1
+#				self.valid[j] /= len(self.data[])
 
 def csvparse():
 	files = []
@@ -46,6 +33,13 @@ def csvparse():
 	return files
 
 register = template.Library()
+
+def is_number(s):
+	try:
+		float(s)
+		return True
+	except ValueError:
+		return False
 
 @register.filter
 def get_type(value):
