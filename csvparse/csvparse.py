@@ -1,4 +1,4 @@
-import os,csv,sys
+import os,csv,sys, operator
 from django.conf import settings
 from django import template
 
@@ -7,18 +7,16 @@ class CSVFile:
 	def __init__(self, file_name, data, header=False):
 		self.filename = file_name
 		self.data = data
-		self.valid = [0]*len(data[0])
-		self.type = [0]*len(data[0])
+		self.type = [[0]*3]*len(data[0])
 		self.validation_check()
 
 	def validation_check(self):
-		for i in range(len(self.data)):
-			for j in range(len(self.data[i])):
-				if is_number(self.data[i][j]):
-					self.valid[j] += 1
-				else:
-					self.valid[j] -= 1
-#				self.valid[j] /= len(self.data[])
+		for j in range(len(self.data[0])):
+			column = self.data[:][j]
+			for i in range(len(column)):
+				data_type = classify(column[i])
+				self.type[j][data_type] += 1
+
 
 def csvparse():
 	files = []
@@ -34,12 +32,16 @@ def csvparse():
 
 register = template.Library()
 
-def is_number(s):
+def classify(s):
 	try:
-		float(s)
-		return True
-	except ValueError:
-		return False
+		int(s)
+		return 0
+	except:
+		try:
+			float(s)
+			return 1
+		except:
+			return 2
 
 @register.filter
 def get_type(value):
